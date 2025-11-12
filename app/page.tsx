@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <div className="p-4">
       <h1>hello chuayjod</h1>
-      <div className="flex items-center gap-3 tex-red-500 bg-yellow-50">
+      <div className="flex items-center gap-3">
         <DatePicker />
         <Input />
       </div>
