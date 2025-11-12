@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function proxy(request: NextRequest) {
+const protectedRoutes = ['/dashboard']
+const publicRoutes = ['/login', '/signup', '/']
 
+export async function proxy(request: NextRequest) {
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: [
+    '/dashboard/:path*',
+    '/transaction/:path*',
+    '/account/:path*',
+    '/category/:path*',
+  ],
 }
