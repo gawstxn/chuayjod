@@ -1,19 +1,21 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { PINForm } from "@/components/pin-form"
+import { useState } from "react"
 
 export default function Page() {
-  const router = useRouter()
-
-  useEffect(() => {
-    const authPassword = prompt('Enter password:')
-    if (authPassword === '1234') {
-      router.push('/dashboard')
-    } else {
-      alert('รหัสผ่านไม่ถูกต้อง')
-    }
-  }, [router])
-
-  return <p>Checking password...</p>
+  const [pin, setPin] = useState('')
+  return (
+    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <PINForm 
+          value={pin}
+          onChange={setPin}
+          onSubmit={(val) => {
+            console.log('OTP ที่ส่ง:', val)
+          }}
+        />
+      </div>
+    </div>
+  )
 }
