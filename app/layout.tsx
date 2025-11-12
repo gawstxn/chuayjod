@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { IBM_Plex_Sans_Thai } from "next/font/google"
+import { ThemeProvider } from "@/components/theme-provider"
 import packageJson from '@/package.json'
 import "./globals.css"
 
@@ -10,7 +11,7 @@ const ibmThai = IBM_Plex_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: `Chuayjod ${packageJson.version}`,
+  title: `Chuayjod v${packageJson.version}`,
   description: "Chuayjod Description...",
 };
 
@@ -18,7 +19,14 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${ibmThai.variable} antialiased`}>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
