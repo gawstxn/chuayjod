@@ -2,6 +2,6 @@
 
 export default function HomePage() {
   return (
-    <div>test branch v1.0</div>
+    <div>test branch v1.0 ทดสอบภาษาไทย</div>
   )
 }
