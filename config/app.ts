@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
-  name: 'chuayjod',
-  description: "chuayjod indev...",
+  name: 'Chuayjod',
+  description: "Chuayjod indev...",
   version: '1.0',
 }

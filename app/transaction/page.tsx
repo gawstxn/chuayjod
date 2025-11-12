@@ -1,9 +1,9 @@
 'use client'
 
-export default function DashboardPage() {
+export default function TransactionPage() {
   return (
     <div className="min-h-screen w-full p-6 bg-foreground/2">
-      Dashboard
+      Transaction
     </div>
   )
 }

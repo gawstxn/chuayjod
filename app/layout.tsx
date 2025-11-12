@@ -1,3 +1,4 @@
+import Sidebar from "@/components/sidebar"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { APP_CONFIG } from "@/config/app"
@@ -24,11 +25,16 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
       <body className={`${ibmThai.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light" // default system
           enableSystem
           disableTransitionOnChange
         >
-          <main>{children}</main>
+          <div className="flex flex-col lg:flex-row">
+            <div className="sticky top-0 flex">
+              <Sidebar/>
+            </div>
+            <main className="w-full">{children}</main>
+          </div>
           <Toaster/>
         </ThemeProvider>
       </body>
