@@ -1,37 +1,19 @@
 'use client'
 
-import { DatePicker } from "@/components/date-picker"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { toast } from "sonner"
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
-export default function HomePage() {
-  return (
-    <div className="p-4">
-      <h1>hello chuayjod</h1>
-      <div className="flex items-center gap-3">
-        <DatePicker />
-        <Input />
-      </div>
-      <Button
-        className="mt-4" 
-        variant="outline"
-        onClick={() => {
-          toast.promise<{ name: string }>(
-            () =>
-              new Promise((resolve) =>
-                setTimeout(() => resolve({ name: "Event" }), 2000)
-              ),
-            {
-              loading: "Loading...",
-              success: (data) => `${data.name} has been created`,
-              error: "Error",
-            }
-          )
-        }}
-      >
-        Promise
-      </Button>
-    </div>
-  )
+export default function Page() {
+  const router = useRouter()
+
+  useEffect(() => {
+    const authPassword = prompt('Enter password:')
+    if (authPassword === '1234') {
+      router.push('/dashboard')
+    } else {
+      alert('รหัสผ่านไม่ถูกต้อง')
+    }
+  }, [router])
+
+  return <p>Checking password...</p>
 }
