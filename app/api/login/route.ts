@@ -1,10 +1,12 @@
 import { signToken } from "@/lib/auth"
 import { NextRequest, NextResponse } from "next/server"
 
+const authUser = process.env.AUTH_USER
+const authPass = process.env.AUTH_PASS
+
 export async function POST(req: NextRequest) {
   const {username, password} = await req.json()
-    console.log('Received:', username, password)
-  if (username === 'aaa' && password === 'aaa') {
+  if (username === authUser && password === authPass) {
     const token = signToken({username})
     return NextResponse.json({token})
   }
