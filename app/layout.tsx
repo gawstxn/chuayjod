@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import { IBM_Plex_Sans_Thai } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
-import packageJson from '@/package.json'
+import { APP_CONFIG } from "@/config/app"
+import { ENV } from "@/config/env"
 import "./globals.css"
 
 const ibmThai = IBM_Plex_Sans_Thai({
@@ -11,11 +12,12 @@ const ibmThai = IBM_Plex_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: `Chuayjod v${packageJson.version}`,
-  description: "Chuayjod Description...",
+  title: `${APP_CONFIG.name} v${APP_CONFIG.version}`,
+  description: APP_CONFIG.description,
 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
+  if (ENV.isDev) console.log("Running in dev mode 🚧")
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${ibmThai.variable} antialiased`}>

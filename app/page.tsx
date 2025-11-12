@@ -1,7 +1,12 @@
 'use client'
 
+import { DatePicker } from "@/components/date-picker"
+
 export default function HomePage() {
   return (
-    <div>test branch v1.0 ทดสอบภาษาไทย</div>
+    <div className="p-4">
+      <h1>hello chuayjod</h1>
+      <DatePicker />
+    </div>
   )
 }
