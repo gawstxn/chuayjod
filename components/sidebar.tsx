@@ -5,6 +5,7 @@ import { CreditCard, Menu, PiggyBank, Repeat, SquareChartGantt, Tags, X } from "
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
+import { ModeToggle } from "./mode-toggle"
 import { Button } from "./ui/button"
 
 interface routeItem {
@@ -33,6 +34,9 @@ export default function Sidebar() {
           <PiggyBank/>
           <h1 className="text-lg font-bold">{APP_CONFIG.name}</h1>
         </div>
+        <div className="hidden lg:block">
+          <ModeToggle />
+        </div>
         <Button 
           size={"icon"} 
           variant={"outline"} 
@@ -57,14 +61,21 @@ export default function Sidebar() {
             </Button>
           </Link>
         ))}
+        <hr />
       </div>
       {/* mobile route items */}
       {isMobileMenuOpen && (
-        <div className="bg-background fixed h-full w-full flex flex-col lg:hidden gap-3 p-4">
+        <div
+          className={`
+            bg-background fixed h-full w-full flex flex-col lg:hidden gap-3 p-4
+            transform transition-transform duration-300 ease-out
+            ${isMobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}
+          `}
+        >
           {routeItems.map((item, key) => (
             <Link href={item.path} key={key}>
               <Button 
-                size={"lg"} 
+                size="lg" 
                 className="w-full flex justify-start items-center cursor-pointer" 
                 variant={isActive(item.path) ? "default" : "ghost"}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -74,6 +85,10 @@ export default function Sidebar() {
               </Button>
             </Link>
           ))}
+          <hr />
+          <div className="w-full">
+            <ModeToggle />
+          </div>
         </div>
       )}
     </div>

@@ -24,9 +24,9 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
       <body className={`${ibmThai.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light" // default system
+          defaultTheme="system" // default system
           enableSystem
-          disableTransitionOnChange
+          // disableTransitionOnChange
         >
           {children}
           <Toaster/>
