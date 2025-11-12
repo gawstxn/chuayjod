@@ -1,20 +1,20 @@
 'use client'
 
 import { DatePicker } from "@/components/date-picker"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 
 export default function HomePage() {
   return (
     <div className="p-4">
       <h1>hello chuayjod</h1>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 tex-red-500 bg-yellow-50">
         <DatePicker />
         <Input />
       </div>
       <Button
-        className="mt-4"
+        className="mt-4" 
         variant="outline"
         onClick={() => {
           toast.promise<{ name: string }>(

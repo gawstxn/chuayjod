@@ -1,9 +1,9 @@
-import type { Metadata } from "next"
-import { IBM_Plex_Sans_Thai } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { APP_CONFIG } from "@/config/app"
 import { ENV } from "@/config/env"
+import type { Metadata } from "next"
+import { IBM_Plex_Sans_Thai } from "next/font/google"
 import "./globals.css"
 
 const ibmThai = IBM_Plex_Sans_Thai({
