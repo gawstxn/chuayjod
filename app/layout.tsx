@@ -1,4 +1,3 @@
-import Sidebar from "@/components/sidebar"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { APP_CONFIG } from "@/config/app"
@@ -29,12 +28,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col lg:flex-row">
-            <div className="sticky top-0 flex">
-              <Sidebar/>
-            </div>
-            <main className="w-full">{children}</main>
-          </div>
+          {children}
           <Toaster/>
         </ThemeProvider>
       </body>
