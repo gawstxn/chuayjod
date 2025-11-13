@@ -39,8 +39,9 @@ export default function Sidebar() {
           error: (err) => err?.response?.data?.message || err.message || "เกิดข้อผิดพลาด",
         }
       )
-    } finally {
       router.push('/')
+    } catch(e) {
+      console.log(e)
     }
   }
 

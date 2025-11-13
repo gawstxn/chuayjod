@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
@@ -13,7 +15,7 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (isSubmitting) return
     setIsSubmitting(true)
@@ -30,15 +32,15 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
           error: "PIN ไม่ถูกต้องโปรดลองใหม่อีกครั้ง",
         }
       )
+      router.push('/dashboard')
     } finally {
       setIsSubmitting(false)
-      router.push('/dashboard')
     }
   }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a
