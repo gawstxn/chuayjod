@@ -1,5 +1,3 @@
-'use client'
-
 import { PINForm } from "@/components/pin-form"
 
 export default function PinPage() {
