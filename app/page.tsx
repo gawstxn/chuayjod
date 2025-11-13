@@ -3,7 +3,7 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
 export default async function HomePage() {
-  const token = ((await cookies()).get('pin_token')?.value)
+  const token = ((await cookies()).get('token')?.value)
 
   // ถ้าไม่มี token → ไป /pin
   if (!token) {

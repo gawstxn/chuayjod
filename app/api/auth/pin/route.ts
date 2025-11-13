@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   const token = signPinToken()
   const response = NextResponse.json({ success: true, message: "Authentication successful" }, { status: 200 })
   response.cookies.set({
-    name: "pin_token",
+    name: "token",
     value: token,
     httpOnly: true, // ปลอดภัย
     path: "/",      // สำคัญ! เพื่อให้ cookie อยู่ทุก path

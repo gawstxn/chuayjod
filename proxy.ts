@@ -16,7 +16,7 @@ const PROTECTED_PATHS = [
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const cookies = cookie.parse(request.headers.get("cookie") || "")
-  const token = cookies.pin_token
+  const token = cookies.token
 
   // 🧩 ฟังก์ชันช่วยเช็ก path
   const isPublic = PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"))
@@ -34,7 +34,7 @@ export async function proxy(request: NextRequest) {
     } catch {
       // ถ้า token เสียหาย → ลบ cookie แล้วไป /pin
       const res = NextResponse.redirect(new URL("/pin", request.url))
-      res.cookies.delete("pin_token")
+      res.cookies.delete("token")
       return res
     }
   }
@@ -58,7 +58,7 @@ export async function proxy(request: NextRequest) {
       if (payload) return NextResponse.next()
     } catch {
       const res = NextResponse.redirect(new URL("/pin", request.url))
-      res.cookies.delete("pin_token")
+      res.cookies.delete("token")
       return res
     }
   }
