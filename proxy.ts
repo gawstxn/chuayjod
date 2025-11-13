@@ -31,19 +31,22 @@ export async function proxy(request: NextRequest) {
   }
 
   // ถ้าเป็น protected path → ต้องมี token valid
-  if (isProtected) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/pin", request.url))
-    }
-    try {
-      const payload = verifyPinToken(token)
-      if (payload) return NextResponse.next()
-    } catch {
-      const res = NextResponse.redirect(new URL("/pin", request.url))
-      res.cookies.delete("token")
-      return res
-    }
+  if(isProtected) {
+    if (!token) return NextResponse.redirect(new URL("/pin", request.url))
+    else return NextResponse.next()
   }
+  // if (isProtected) {
+  //   if (!token) {
+  //   }
+  //   try {
+  //     const payload = verifyPinToken(token)
+  //     if (payload) return NextResponse.next()
+  //   } catch {
+  //     const res = NextResponse.redirect(new URL("/pin", request.url))
+  //     res.cookies.delete("token")
+  //     return res
+  //   }
+  // }
 
   // public path → ผ่าน
   return NextResponse.next()

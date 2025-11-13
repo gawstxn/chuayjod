@@ -3,19 +3,17 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
 export default async function HomePage() {
-  const token = ((await cookies()).get('token')?.value)
+  const token = (await cookies()).get("token")?.value
 
-  // ถ้าไม่มี token → ไป /pin
-  if (!token) {
+  if (!token) redirect("/pin")
+
+  try {
+    const decoded = verifyPinToken(token)
+    console.log(decoded)
+  } catch (err) {
+    console.log(err)
     redirect("/pin")
   }
-  // ตรวจสอบ token
-  const decoded = verifyPinToken(token)
 
-  if (!decoded) {
-    redirect("/pin")
-  }
-
-  // ถ้าผ่านทั้งหมด → ไป /dashboard
   redirect("/dashboard")
 }
