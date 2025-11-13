@@ -9,7 +9,15 @@ export async function POST(req: NextRequest) {
   if (!valid) return NextResponse.json({message: "Invalid PIN"}, {status: 401})
 
   const token = signPinToken()
-  return NextResponse.json({ success: true, token })
+  const response = NextResponse.json({ success: true, message: "Authentication successful" }, { status: 200 })
+  response.cookies.set('pin_token', token, {
+    httpOnly: true, // ป้องกันการเข้าถึงผ่าน JavaScript ในฝั่ง Client
+    secure: process.env.NODE_ENV === 'production', // ใช้ HTTPS ใน production
+    maxAge: 60 * 30, // 30 นาที ตามที่กำหนดใน signPinToken
+    path: '/', // ให้ Cookie ใช้งานได้ทั่วทั้งแอป
+    sameSite: 'strict',
+  })
+  return response
 }
 
 export async function GET(req: NextRequest) {

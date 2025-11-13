@@ -1,10 +1,12 @@
 'use client'
 
 import { APP_CONFIG } from "@/config/app"
-import { CreditCard, Menu, PiggyBank, Repeat, SquareChartGantt, Tags, X } from "lucide-react"
+import axios from "axios"
+import { CreditCard, LogOut, Menu, PiggyBank, Repeat, SquareChartGantt, Tags, X } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { redirect, usePathname } from "next/navigation"
 import { useState } from "react"
+import { toast } from "sonner"
 import { ModeToggle } from "./mode-toggle"
 import { Button } from "./ui/button"
 
@@ -25,6 +27,21 @@ export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
   const pathname = usePathname()
   const isActive = (path: string) => pathname?.startsWith(path)
+
+  const handleLogout = async () => {
+    try {
+      toast.promise(
+        axios.post("/api/auth/pin/logout"),
+        {
+          loading: "กำลังออกจากระบบ",
+          success: "ออกจากระบบสำเร็จ",
+          error: (err) => err?.response?.data?.message || err.message || "เกิดข้อผิดพลาด",
+        }
+      )
+    } finally {
+      redirect('/')
+    }
+  }
 
   return (
     <div className="h-full w-full lg:border-r bg-background">
@@ -47,7 +64,7 @@ export default function Sidebar() {
         </Button>
       </div>
       {/* desktop route items */}
-      <div className="hidden lg:flex flex-col gap-3 w-72 p-4">
+      <div className="relative hidden lg:flex flex-col justify-between gap-3 w-72 p-4">
         {routeItems.map((item, key) => (
           <Link href={item.path} key={key}>
             <Button 
@@ -62,6 +79,14 @@ export default function Sidebar() {
           </Link>
         ))}
         <hr />
+        <Button 
+          variant={"destructive"}
+          className="w-full cursor-pointer"
+          onClick={handleLogout}    
+        >
+          <LogOut />
+          ออกจากระบบ
+        </Button>
       </div>
       {/* mobile route items */}
       {isMobileMenuOpen && (

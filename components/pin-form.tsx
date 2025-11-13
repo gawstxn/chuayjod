@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import axios from 'axios'
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 import { Lock } from "lucide-react"
+import { redirect } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -24,12 +25,13 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
         axios.post("/api/auth/pin", { pin }),
         {
           loading: "กำลังตรวจสอบ PIN...",
-          success: "เข้าสู่ระบบสำเร็จ ✅",
-          error: (err) => err?.response?.data?.message || err.message || "เกิดข้อผิดพลาด",
+          success: "เข้าสู่ระบบสำเร็จ",
+          error: "PIN ไม่ถูกต้องโปรดลองใหม่อีกครั้ง",
         }
       )
     } finally {
       setIsSubmitting(false)
+      redirect('/dashboard')
     }
   }
 
