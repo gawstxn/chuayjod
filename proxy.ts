@@ -2,7 +2,7 @@ import { verifyPinToken } from "@/lib/auth"
 import * as cookie from "cookie"
 import { NextRequest, NextResponse } from "next/server"
 
-const PUBLIC_PATHS = ["/pin", "/api/auth"]
+const PUBLIC_PATHS = ["/", "/pin", "/api/auth"]
 const PROTECTED_PATHS = ["/dashboard", "/transaction", "/account", "/category"]
 
 export async function proxy(request: NextRequest) {
@@ -17,7 +17,7 @@ export async function proxy(request: NextRequest) {
   if (!isPublic && !isProtected) return NextResponse.redirect(new URL("/pin", request.url))
 
   // ถ้าเข้าหน้า /pin แต่มี token valid → redirect /dashboard
-  if (pathname === "/pin" && token) {
+  if (isPublic && token) {
     try {
       const payload = verifyPinToken(token)
       if (payload) {
