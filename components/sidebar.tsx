@@ -1,0 +1,121 @@
+'use client'
+
+import { APP_CONFIG } from "@/config/app"
+import axios from "axios"
+import { CreditCard, LogOut, Menu, PiggyBank, Repeat, SquareChartGantt, Tags, X } from "lucide-react"
+import Link from "next/link"
+import { redirect, usePathname } from "next/navigation"
+import { useState } from "react"
+import { toast } from "sonner"
+import { ModeToggle } from "./mode-toggle"
+import { Button } from "./ui/button"
+
+interface routeItem {
+  label: string
+  path: string
+  icon: React.ReactNode
+}
+
+const routeItems: routeItem[] = [
+  { label: 'แดชบอร์ด', path: '/dashboard', icon: <SquareChartGantt/> },
+  { label: 'รายการธุรกรรม', path: '/transaction', icon: <Repeat/> },
+  { label: 'หมวดหมู่', path: '/category', icon: <Tags/> },
+  { label: 'บัญชี', path: '/account', icon: <CreditCard/> },
+]
+
+export default function Sidebar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
+  const pathname = usePathname()
+  const isActive = (path: string) => pathname?.startsWith(path)
+
+  const handleLogout = async () => {
+    try {
+      toast.promise(
+        axios.post("/api/auth/pin/logout"),
+        {
+          loading: "กำลังออกจากระบบ",
+          success: "ออกจากระบบสำเร็จ",
+          error: (err) => err?.response?.data?.message || err.message || "เกิดข้อผิดพลาด",
+        }
+      )
+    } finally {
+      redirect('/')
+    }
+  }
+
+  return (
+    <div className="h-full w-full lg:border-r bg-background">
+      {/* header */}
+      <div className="flex justify-between items-center border-b p-4">
+        <div className="flex items-center gap-1">
+          <PiggyBank/>
+          <h1 className="text-lg font-bold">{APP_CONFIG.name}</h1>
+        </div>
+        <div className="hidden lg:block">
+          <ModeToggle />
+        </div>
+        <Button 
+          size={"icon"} 
+          variant={"outline"} 
+          className="flex lg:hidden"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X /> : <Menu />}
+        </Button>
+      </div>
+      {/* desktop route items */}
+      <div className="relative hidden lg:flex flex-col justify-between gap-3 w-72 p-4">
+        {routeItems.map((item, key) => (
+          <Link href={item.path} key={key}>
+            <Button 
+              size={"lg"} 
+              className="w-full flex justify-start items-center cursor-pointer" 
+              variant={isActive(item.path) ? "default" : "ghost"}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </Button>
+          </Link>
+        ))}
+        <hr />
+        <Button 
+          variant={"destructive"}
+          className="w-full cursor-pointer"
+          onClick={handleLogout}    
+        >
+          <LogOut />
+          ออกจากระบบ
+        </Button>
+      </div>
+      {/* mobile route items */}
+      {isMobileMenuOpen && (
+        <div
+          className={`
+            bg-background fixed h-full w-full flex flex-col lg:hidden gap-3 p-4
+            transform transition-transform duration-300 ease-out
+            ${isMobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}
+          `}
+        >
+          {routeItems.map((item, key) => (
+            <Link href={item.path} key={key}>
+              <Button 
+                size="lg" 
+                className="w-full flex justify-start items-center cursor-pointer" 
+                variant={isActive(item.path) ? "default" : "ghost"}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Button>
+            </Link>
+          ))}
+          <hr />
+          <div className="w-full">
+            <ModeToggle />
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
