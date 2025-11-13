@@ -3,9 +3,10 @@ import * as cookie from 'cookie'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-const PUBLIC_PATHS = ['/', '/api/auth']
+const PUBLIC_PATHS = ['/', '/pin', '/api/auth']
 const VALID_PATHS = [
   '/',
+  '/pin',
   '/dashboard',
   '/transaction',
   '/account',
@@ -18,15 +19,15 @@ export default async function proxy(request: NextRequest) {
   const token = cookies.pin_token
 
   // 1. หน้า PIN (/)
-  if (VALID_PATHS.includes(pathname)) {
+  if (pathname === "/") {
     if (token) {
-      const verified = await verifyPinToken(token)
+      const verified = verifyPinToken(token)
       if (verified) return NextResponse.redirect(new URL('/dashboard', request.url))
       else {
         const response = NextResponse.next()
         response.cookies.delete({
-        name: 'pin_token',
-          path: '/',  
+          name: 'pin_token',
+          path: '/',
         })
         return response
       }
@@ -40,13 +41,13 @@ export default async function proxy(request: NextRequest) {
 
   // 3. ตรวจสอบ token
   if (!token) return NextResponse.redirect(new URL('/', request.url))
-  const verified = await verifyPinToken(token)
+  const verified = verifyPinToken(token)
   if (!verified) {
     const response = NextResponse.redirect(new URL('/', request.url))
-    response.cookies.delete({
-    name: 'pin_token',
-      path: '/',  
-    })
+    // response.cookies.delete({
+    // name: 'pin_token',
+    //   path: '/',  
+    // })
     return response
   }
 
@@ -63,6 +64,7 @@ export default async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/pin',
     '/dashboard/:path*',
     '/transaction/:path*',
     '/category/:path*',
