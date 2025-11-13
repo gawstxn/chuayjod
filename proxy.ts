@@ -18,9 +18,9 @@ export default async function proxy(request: NextRequest) {
   const token = cookies.pin_token
 
   // 1. หน้า PIN (/)
-  if (pathname === '/') {
+  if (VALID_PATHS.includes(pathname)) {
     if (token) {
-      const verified = verifyPinToken(token)
+      const verified = await verifyPinToken(token)
       if (verified) return NextResponse.redirect(new URL('/dashboard', request.url))
       else {
         const response = NextResponse.next()
@@ -40,7 +40,7 @@ export default async function proxy(request: NextRequest) {
 
   // 3. ตรวจสอบ token
   if (!token) return NextResponse.redirect(new URL('/', request.url))
-  const verified = verifyPinToken(token)
+  const verified = await verifyPinToken(token)
   if (!verified) {
     const response = NextResponse.redirect(new URL('/', request.url))
     response.cookies.delete({
