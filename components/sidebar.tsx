@@ -4,7 +4,7 @@ import { APP_CONFIG } from "@/config/app"
 import axios from "axios"
 import { CreditCard, LogOut, Menu, PiggyBank, Repeat, SquareChartGantt, Tags, X } from "lucide-react"
 import Link from "next/link"
-import { redirect, usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 import { ModeToggle } from "./mode-toggle"
@@ -26,6 +26,7 @@ const routeItems: routeItem[] = [
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
   const pathname = usePathname()
+  const router = useRouter()
   const isActive = (path: string) => pathname?.startsWith(path)
 
   const handleLogout = async () => {
@@ -39,7 +40,7 @@ export default function Sidebar() {
         }
       )
     } finally {
-      redirect('/')
+      router.push('/')
     }
   }
 

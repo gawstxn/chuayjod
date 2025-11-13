@@ -5,12 +5,13 @@ import { cn } from "@/lib/utils"
 import axios from 'axios'
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 import { Lock } from "lucide-react"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 
 export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -31,7 +32,7 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
       )
     } finally {
       setIsSubmitting(false)
-      redirect('/dashboard')
+      router.push('/dashboard')
     }
   }
 
