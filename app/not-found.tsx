@@ -1,31 +1,22 @@
 // app/not-found.tsx
-"use client"
+import { verifyPinToken } from "@/lib/auth"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+export default async function NotFoundPage() {
+  const token = (await cookies()).get("token")?.value
 
-export default function NotFoundPage() {
-  const router = useRouter()
+  if (!token) redirect("/pin")
 
-  useEffect(() => {
-    // ตรวจ token
-    const token = document.cookie
-      .split("; ")
-      .find((c) => c.startsWith("token="))
-      ?.split("=")[1]
-
-    if (token) {
-      // ถ้ามี token → ไป /dashboard
-      router.replace("/dashboard")
-    } else {
-      // ไม่มี token → ไป /pin
-      router.replace("/pin")
-    }
-  }, [router])
+  try {
+    const decoded = verifyPinToken(token)
+    redirect("/dashboard")
+  } catch (err) {
+    // token invalid → ไป /pin
+    redirect("/pin")
+  }
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <p className="text-gray-500">Page not found. Redirecting...</p>
-    </div>
+    <div>test</div>
   )
 }

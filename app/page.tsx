@@ -9,9 +9,7 @@ export default async function HomePage() {
 
   try {
     const decoded = verifyPinToken(token)
-    console.log(decoded)
   } catch (err) {
-    console.log(err)
     redirect("/pin")
   }
 
