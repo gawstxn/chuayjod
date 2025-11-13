@@ -1,67 +1,82 @@
-import { verifyPinToken } from '@/lib/auth'
-import * as cookie from 'cookie'
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
+import { verifyPinToken } from "@/lib/auth"
+import * as cookie from "cookie"
+import { NextRequest, NextResponse } from "next/server"
 
-const PUBLIC_PATHS = ['/', '/api/auth']
-const VALID_PATHS = [
-  '/',
-  '/dashboard',
-  '/transaction',
-  '/account',
-  '/category'
+// ✅ หน้า public ที่ไม่ต้องล็อกอินก็เข้าได้
+const PUBLIC_PATHS = ["/", "/pin", "/api/auth"]
+
+// ✅ หน้า protected ที่ต้องล็อกอินก่อนถึงจะเข้าได้
+const PROTECTED_PATHS = [
+  "/dashboard",
+  "/transaction",
+  "/account",
+  "/category",
 ]
 
-export default async function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const cookies = cookie.parse(request.headers.get('cookie') || '')
-  const token = cookies.pin_token
+  const cookies = cookie.parse(request.headers.get("cookie") || "")
+  const token = cookies.token
 
-  // 1. หน้า PIN (/)
-  if (pathname === '/') {
-    if (token) {
-      const verified = verifyPinToken(token)
-      if (verified) return NextResponse.redirect(new URL('/dashboard', request.url))
-      else {
-        const response = NextResponse.next()
-        response.cookies.delete({
-        name: 'pin_token',
-          path: '/',  
-        })
-        return response
+  // 🧩 ฟังก์ชันช่วยเช็ก path
+  const isPublic = PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"))
+  const isProtected = PROTECTED_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"))
+
+  // ✅ ถ้ามี token แล้วพยายามเข้า / หรือ /pin → ไป /dashboard
+  if (token && (pathname === "/" || pathname.startsWith("/pin"))) {
+    try {
+      const payload = await verifyPinToken(token)
+      if (payload) {
+        const url = request.nextUrl.clone()
+        url.pathname = "/dashboard"
+        return NextResponse.redirect(url)
       }
+    } catch {
+      // ถ้า token เสียหาย → ลบ cookie แล้วไป /pin
+      const res = NextResponse.redirect(new URL("/pin", request.url))
+      res.cookies.delete("token")
+      return res
     }
-    return NextResponse.next() // ไม่มี token → หน้า PIN
   }
 
-  // 2. Public API → allow
-  const isPublicPath = PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path + '/'))
-  if (isPublicPath) return NextResponse.next()
-
-  // 3. ตรวจสอบ token
-  if (!token) return NextResponse.redirect(new URL('/', request.url))
-  const verified = verifyPinToken(token)
-  if (!verified) {
-    const response = NextResponse.redirect(new URL('/', request.url))
-    response.cookies.delete({
-    name: 'pin_token',
-      path: '/',  
-    })
-    return response
+  // ✅ ถ้าเป็น public page → ผ่านได้เลย
+  if (isPublic) {
+    return NextResponse.next()
   }
 
-  // 4. ตรวจสอบ path ที่มีอยู่จริง
-  if (!VALID_PATHS.includes(pathname)) {
-    console.warn(`Attempted access to invalid path: ${pathname}`)
-    return NextResponse.redirect(new URL('/dashboard', request.url)) // redirect ไป dashboard แทน 404
+  // ✅ ถ้าเป็น protected page แต่ไม่มี token → ไป /pin
+  if (isProtected && !token) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/pin"
+    return NextResponse.redirect(url)
   }
 
-  // 5. token valid + path valid → allow
-  return NextResponse.next()
+  // ✅ ถ้ามี token → ตรวจสอบว่า valid ไหม
+  if (isProtected && token) {
+    try {
+      const payload = await verifyPinToken(token)
+      if (payload) return NextResponse.next()
+    } catch {
+      const res = NextResponse.redirect(new URL("/pin", request.url))
+      res.cookies.delete("token")
+      return res
+    }
+  }
+
+  // ❌ ถ้าไม่อยู่ใน public/protected → redirect ไป /
+  const url = request.nextUrl.clone()
+  url.pathname = "/"
+  return NextResponse.redirect(url)
 }
 
+// ✅ ระบุ path ที่ middleware จะตรวจจับ
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    "/pin",
+    "/dashboard/:path*",
+    "/transaction/:path*",
+    "/account/:path*",
+    "/category/:path*",
   ],
-};
+}

@@ -1,13 +1,21 @@
-'use client'
+import { verifyPinToken } from "@/lib/auth"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 
-import { PINForm } from "@/components/pin-form"
+export default async function HomePage() {
+  const token = ((await cookies()).get('token')?.value)
 
-export default function Page() {
-  return (
-    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <PINForm />
-      </div>
-    </div>
-  )
+  // ถ้าไม่มี token → ไป /pin
+  if (!token) {
+    redirect("/pin")
+  }
+  // ตรวจสอบ token
+  const decoded = verifyPinToken(token)
+
+  if (!decoded) {
+    redirect("/pin")
+  }
+
+  // ถ้าผ่านทั้งหมด → ไป /dashboard
+  redirect("/dashboard")
 }

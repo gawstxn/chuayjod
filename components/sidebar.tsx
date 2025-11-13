@@ -88,6 +88,8 @@ export default function Sidebar() {
           <LogOut />
           ออกจากระบบ
         </Button>
+        
+        <p className="fixed left-0 bottom-0 p-4 text-muted-foreground">{APP_CONFIG.name} V.{APP_CONFIG.version}</p>
       </div>
       {/* mobile route items */}
       {isMobileMenuOpen && (
