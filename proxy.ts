@@ -13,8 +13,11 @@ export async function proxy(request: NextRequest) {
   const isPublic = PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"))
   const isProtected = PROTECTED_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"))
 
-  // ถ้า path ไม่อยู่ใน whitelist → redirect /pin
-  if (!isPublic && !isProtected) return NextResponse.redirect(new URL("/pin", request.url))
+  // ถ้าเป็น protected path → ต้องมี token valid
+  if(isProtected) {
+    if (!token) return NextResponse.redirect(new URL("/pin", request.url))
+    else return NextResponse.next()
+  }
 
   // ถ้าเข้าหน้า /pin แต่มี token valid → redirect /dashboard
   if (isPublic && token) {
@@ -30,11 +33,8 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // ถ้าเป็น protected path → ต้องมี token valid
-  if(isProtected) {
-    if (!token) return NextResponse.redirect(new URL("/pin", request.url))
-    else return NextResponse.next()
-  }
+  // ถ้า path ไม่อยู่ใน whitelist → redirect /pin
+  if (!isPublic && !isProtected) return NextResponse.redirect(new URL("/pin", request.url))
   // if (isProtected) {
   //   if (!token) {
   //   }
