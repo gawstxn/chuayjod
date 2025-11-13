@@ -10,12 +10,12 @@ export async function POST(req: NextRequest) {
 
   const token = signPinToken()
   const response = NextResponse.json({ success: true, message: "Authentication successful" }, { status: 200 })
-  response.cookies.set('pin_token', token, {
-    httpOnly: true, // ป้องกันการเข้าถึงผ่าน JavaScript ในฝั่ง Client
-    secure: process.env.NODE_ENV === 'production', // ใช้ HTTPS ใน production
-    maxAge: 60 * 30, // 30 นาที ตามที่กำหนดใน signPinToken
-    path: '/', // ให้ Cookie ใช้งานได้ทั่วทั้งแอป
-    sameSite: 'strict',
+  response.cookies.set({
+    name: "pin_token",
+    value: token,
+    httpOnly: true, // ปลอดภัย
+    path: "/",      // สำคัญ! เพื่อให้ cookie อยู่ทุก path
+    maxAge: 30 * 60 // 30 นาที
   })
   return response
 }
