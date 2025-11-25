@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: APP_CONFIG.description,
     start_url: '/',
     display: 'standalone',
-    // background_color: '#ffffff',
-    // theme_color: '#000000',
+    background_color: '#ffffff',
+    theme_color: '#ffffff',
     icons: [
       {
         src: '/waguriIcon.png',
