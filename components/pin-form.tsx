@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Field, FieldDescription, FieldGroup } from "@/components/ui/field"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import { cn } from "@/lib/utils"
 import axios from 'axios'
@@ -57,9 +57,6 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
             </FieldDescription>
           </div>
           <Field>
-            <FieldLabel htmlFor="otp" className="sr-only">
-              กรุณากรอกรหัสผ่าน
-            </FieldLabel>
             <InputOTP
               name="pin"
               id="pin"
@@ -67,7 +64,7 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
               pattern={REGEXP_ONLY_DIGITS}
               required
             >
-              <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:h-16 *:data-[slot=input-otp-slot]:w-12 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border *:data-[slot=input-otp-slot]:text-xl mx-auto">
+              <InputOTPGroup className="gap-1.5 *:data-[slot=input-otp-slot]:h-16 *:data-[slot=input-otp-slot]:w-12 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border *:data-[slot=input-otp-slot]:text-xl mx-auto">
                 <InputOTPSlot index={0} />
                 <InputOTPSlot index={1} />
                 <InputOTPSlot index={2} />

@@ -8,7 +8,6 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
-import { ModeToggle } from "./mode-toggle"
 import { Button } from "./ui/button"
 
 interface routeItem {
@@ -55,7 +54,7 @@ export default function Sidebar() {
           <h1 className="text-lg font-bold">{APP_CONFIG.name}</h1>
         </div>
         <div className="flex items-center gap-3">
-          <ModeToggle />
+          {/* <ModeToggle /> */}
           <Button 
             size={"icon"} 
             variant={"outline"} 
