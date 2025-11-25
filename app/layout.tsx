@@ -21,6 +21,12 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
   if (ENV.isDev) console.log("Running in dev mode 🚧")
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Dynamic theme color */}
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1f2937" />
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body className={`${ibmThai.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
