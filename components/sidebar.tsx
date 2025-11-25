@@ -32,7 +32,7 @@ export default function Sidebar() {
 
   const handleLogout = async () => {
     try {
-      toast.promise(
+      await toast.promise(
         axios.post("/api/auth/pin/logout"),
         {
           loading: "กำลังออกจากระบบ",
