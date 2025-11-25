@@ -12,12 +12,12 @@ export default function manifest(): MetadataRoute.Manifest {
     // theme_color: '#000000',
     icons: [
       {
-        src: '/ayaseIcon.png',
+        src: '/waguriIcon.png',
         sizes: '192x192',
         type: 'image/png',
       },
       {
-        src: '/ayaseIcon.png',
+        src: '/waguriIcon.png',
         sizes: '512x512',
         type: 'image/png',
       },
