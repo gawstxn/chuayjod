@@ -8,12 +8,13 @@ import axios from 'axios'
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 import { Lock } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { toast } from "sonner"
 
 export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
+  const formRef = useRef<HTMLFormElement>(null)
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -24,15 +25,17 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
     const pin = formData.get("pin")?.toString() || ""
 
     try {
+      const loginPromise = axios.post("/api/auth/pin", { pin })
       toast.promise(
-        axios.post("/api/auth/pin", { pin }),
+        loginPromise,
         {
           loading: "กำลังตรวจสอบ PIN...",
           success: "เข้าสู่ระบบสำเร็จ",
           error: "PIN ไม่ถูกต้องโปรดลองใหม่อีกครั้ง",
         }
       )
-      router.push('/dashboard')
+      await loginPromise
+      router.refresh()
     } finally {
       setIsSubmitting(false)
     }
@@ -40,7 +43,7 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} ref={formRef}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a
@@ -63,6 +66,11 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
               maxLength={6}
               pattern={REGEXP_ONLY_DIGITS}
               required
+              onComplete={() => {
+                if (!isSubmitting) {
+                  formRef.current?.requestSubmit()
+                }
+              }}
             >
               <InputOTPGroup className="gap-1.5 *:data-[slot=input-otp-slot]:h-16 *:data-[slot=input-otp-slot]:w-12 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border *:data-[slot=input-otp-slot]:text-xl mx-auto">
                 <InputOTPSlot index={0} />

@@ -19,15 +19,17 @@ export default function Sidebar() {
 
   const handleLogout = async () => {
     try {
-      await toast.promise(
-        axios.post("/api/auth/pin/logout"),
+      const logoutPromise = axios.post("/api/auth/pin/logout")
+      toast.promise(
+        logoutPromise,
         {
           loading: "กำลังออกจากระบบ",
           success: "ออกจากระบบสำเร็จ",
           error: (err) => err?.response?.data?.message || err.message || "เกิดข้อผิดพลาด",
         }
       )
-      router.push('/')
+      await logoutPromise
+      router.refresh()
     } catch(e) {
       console.log(e)
     }
