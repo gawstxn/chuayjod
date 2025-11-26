@@ -25,17 +25,17 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
     const pin = formData.get("pin")?.toString() || ""
 
     try {
+      const loginPromise = axios.post("/api/auth/pin", { pin })
       toast.promise(
-        axios.post("/api/auth/pin", { pin }),
+        loginPromise,
         {
           loading: "กำลังตรวจสอบ PIN...",
           success: "เข้าสู่ระบบสำเร็จ",
           error: "PIN ไม่ถูกต้องโปรดลองใหม่อีกครั้ง",
         }
       )
-      setTimeout(() => {
-        router.refresh()
-      }, 1000)
+      await loginPromise
+      router.refresh()
     } finally {
       setIsSubmitting(false)
     }

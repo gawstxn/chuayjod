@@ -23,8 +23,8 @@ export async function proxy(request: NextRequest) {
     } catch (err) {
       return NextResponse.redirect(new URL("/pin", request.url))
     }
-    // ถ้า user มี token แต่ไป public path เช่น /pin → redirect ไป dashboard
-    if (isPublic) return NextResponse.redirect(new URL("/dashboard", request.url))
+    // ถ้า user มี token แต่ไป public path เช่น /pin → redirect ไป home
+    if (isPublic) return NextResponse.redirect(new URL("/home", request.url))
   }
 
   // ถ้าเป็น path public หรือ token ถูกต้อง → อนุญาต
