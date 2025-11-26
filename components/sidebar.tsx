@@ -27,7 +27,9 @@ export default function Sidebar() {
           error: (err) => err?.response?.data?.message || err.message || "เกิดข้อผิดพลาด",
         }
       )
-      router.push('/')
+      setTimeout(() => {
+        router.refresh()
+      }, 1000)
     } catch(e) {
       console.log(e)
     }

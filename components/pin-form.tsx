@@ -33,7 +33,9 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
           error: "PIN ไม่ถูกต้องโปรดลองใหม่อีกครั้ง",
         }
       )
-      router.push('/home')
+      setTimeout(() => {
+        router.refresh()
+      }, 1000)
     } finally {
       setIsSubmitting(false)
     }
