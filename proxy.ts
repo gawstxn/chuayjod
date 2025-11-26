@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { verifyPinToken } from "./lib/auth"
 
 const PUBLIC_PATHS = ["/", "/pin", "/api/auth"]
-const PROTECTED_PATHS = ["/dashboard", "/transaction", "/account", "/category"]
+const PROTECTED_PATHS = ["/home", "/transaction", "/account", "/category"]
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -35,7 +35,7 @@ export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
     "/pin",
-    "/dashboard/:path*",
+    "/home/:path*",
     "/transaction/:path*",
     "/account/:path*",
     "/category/:path*",

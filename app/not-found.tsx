@@ -4,5 +4,5 @@ import { redirect } from "next/navigation"
 export default async function NotFoundPage() {
   const token = (await cookies()).get("token")?.value
   if (!token) redirect("/pin")
-  redirect("/dashboard")
+  redirect("/home")
 }

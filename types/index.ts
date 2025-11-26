@@ -1,4 +1,7 @@
-export interface Transaction {
-  id: number | string
-  // TODO: waiting for desgin table
+import { LucideIcon } from "lucide-react"
+
+export interface Route {
+  label: string
+  path: string
+  icon: LucideIcon
 }
