@@ -1,12 +1,9 @@
 /** @type {import("prettier").Config} */
 module.exports = {
-  semi: false,               // ไม่ใส่ ; ท้ายบรรทัด (นิยมใน Next.js)
-  singleQuote: true,         // ใช้ "..." แทน '...'
-  trailingComma: "es5",      // เว้น , ตอนท้าย object/array (ช่วยเวลาพิมพ์เพิ่ม)
-  tabWidth: 2,               // เว้น indent 2 ช่อง
-  printWidth: 100,           // ความยาวสูงสุดต่อบรรทัด
-  bracketSpacing: true,      // { foo: bar } แทน {foo:bar}
-  bracketSameLine: false,    // JSX ปิด tag ในบรรทัดใหม่
-  arrowParens: "always",     // (x) => ... แทน x => ...
-  plugins: [require("prettier-plugin-tailwindcss")], // ✅ เรียง className ของ Tailwind ให้อัตโนมัติ
+  semi: true, // No semicolons at the end of statements
+  singleQuote: false, // Use single quotes instead of double quotes
+  trailingComma: 'es5', // Add trailing commas where valid in ES5 (objects, arrays, etc.)
+  printWidth: 80, // Wrap lines at 80 characters
+  tabWidth: 2, // Use 2 spaces per indentation level
+  useTabs: false, // Use spaces instead of tabs
 }
