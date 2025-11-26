@@ -84,17 +84,11 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
               </InputOTPGroup>
             </InputOTP>
             <FieldDescription className="text-center">
-              {/* คิดไม่ออกเดี๋ยวค่อยหาคำดีๆมาใส่ละกัน ตรงนี้ */}
+              Made with 💖 by <span className="underline cursor-pointer" onClick={() => router.push('https://github.com/gawstxn')}>gawstxn</span>
             </FieldDescription>
           </Field>
-          {/* <Field>
-            <Button type="submit" className="cursor-pointer">เข้าสู่ระบบ</Button>
-          </Field> */}
         </FieldGroup>
       </form>
-      <FieldDescription className="px-6 text-center">
-        Made with 💖 by gawstxn
-      </FieldDescription>
     </div>
   )
 }
