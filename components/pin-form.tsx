@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import { cn } from "@/lib/utils"
@@ -36,7 +35,10 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
       )
       await loginPromise
       router.refresh()
-    } finally {
+    } catch (error: any) {
+      console.log("Error: ", error?.message)
+    }
+    finally {
       setIsSubmitting(false)
     }
   }
@@ -56,7 +58,7 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
             </a>
             <h1 className="text-xl font-bold">Chuayjod PIN</h1>
             <FieldDescription>
-              กรุณายืนยันตัวตน โดยกรอกรหัส PIN 6 หลักเพื่อเข้าสู่ระบบ
+              กรุณายืนยันตัวตนด้วย PIN เพื่อเข้าสู่ระบบ
             </FieldDescription>
           </div>
           <Field>
@@ -82,12 +84,12 @@ export function PINForm({ className, ...props }: React.ComponentProps<"div">) {
               </InputOTPGroup>
             </InputOTP>
             <FieldDescription className="text-center">
-              คิดไม่ออกเดี๋ยวค่อยหาคำดีๆมาใส่ละกัน ตรงนี้
+              {/* คิดไม่ออกเดี๋ยวค่อยหาคำดีๆมาใส่ละกัน ตรงนี้ */}
             </FieldDescription>
           </Field>
-          <Field>
+          {/* <Field>
             <Button type="submit" className="cursor-pointer">เข้าสู่ระบบ</Button>
-          </Field>
+          </Field> */}
         </FieldGroup>
       </form>
       <FieldDescription className="px-6 text-center">
