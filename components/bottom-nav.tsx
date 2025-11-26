@@ -9,7 +9,7 @@ export default function BottomNav() {
   const isActive = (path: string) => pathname?.startsWith(path)
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 w-full bg-background border-t px-4 pt-2 pb-4 z-50">
+    <div className="lg:hidden fixed bottom-0 left-0 w-full bg-background border-t px-4 pt-2 pb-6 z-50">
       <div className="flex justify-around py-2">
         {routes.map((item) => (
           <Link href={item.path} key={item.path}>
