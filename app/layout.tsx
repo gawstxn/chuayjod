@@ -13,7 +13,7 @@ const ibmThai = IBM_Plex_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: `${APP_CONFIG.name} v${APP_CONFIG.version}`,
+  title: `${APP_CONFIG.name}`,
   description: APP_CONFIG.description,
 };
 

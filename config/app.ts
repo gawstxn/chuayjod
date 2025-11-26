@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
   name: 'Chuayjod',
-  description: "Chuayjod indev...",
+  description: "A Progressive Web Application for managing personal finances efficiently.",
   version: '1.0',
 }
