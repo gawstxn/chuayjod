@@ -1,22 +1,57 @@
 import { getSheetsClient } from "@/lib/google-sheets"
+import { PaginatedData, TransactionItem } from "@/types"
 import { nanoid } from "nanoid"
 import { NextRequest } from "next/server"
 
 export async function GET(req: NextRequest) {
   try {
-    // For pagination
     const { searchParams } = new URL(req.url)
     const limit = Number(searchParams.get('limit') ?? 20)
     const page = Number(searchParams.get('page') ?? 1)
-    const start = (page - 1) * limit + 2; 
-    const end = start + limit - 1;
+    const sheetName = 'Transaction'
+    const dataStartRow = (page - 1) * limit + 2
+    const dataEndRow = dataStartRow + limit - 1
 
     const sheets = await getSheetsClient()
-    const res = await sheets.spreadsheets.values.get({
+    const headerRes = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: `Transaction!A${start}:K${end}`, // <-- เริ่มต้นที่แถวที่ 2 (A2) และไปจนถึงคอลัมน์ K
+      range: `${sheetName}!A1:K1`,
     })
-    return Response.json({ data: res.data.values })
+
+    // ดึงชื่อคอลัมน์ออกมาจากผลลัพธ์ (คาดว่าอยู่ที่ index 0)
+    const COLUMN_HEADERS: string[] = headerRes.data.values?.[0] || []
+    if (COLUMN_HEADERS.length === 0) throw new Error('ไม่พบข้อมูลส่วนหัว (Header Row) ในชีต')
+
+    const dataRes = await sheets.spreadsheets.values.get({
+      spreadsheetId: process.env.GOOGLE_SHEET_ID,
+      range: `${sheetName}!A${dataStartRow}:K${dataEndRow}`,
+    })
+    // ดึงจำนวนแถวทั้งหมด (เพื่อหาค่า total)
+    // const totalRes = await sheets.spreadsheets.values.get({
+    //   spreadsheetId: process.env.GOOGLE_SHEET_ID,
+    //   range: `${sheetName}!A:A`, 
+    // })
+    // จำนวนแถวทั้งหมด = จำนวนแถวที่ดึงมา - 1 (ลบแถว Header ออก)
+    // const totalRows = totalRes.data.values ? totalRes.data.values.length - 1 : 0
+
+    // Map ข้อมูลเข้ากับ Header Keys
+    const rawValues = dataRes.data.values || []
+    const items: TransactionItem[] = rawValues.map((row: string[]) => {
+      const item: Partial<TransactionItem> = {}
+      COLUMN_HEADERS.forEach((header, index) => {
+        // ใช้ค่าจากแถวที่ 1 เป็นชื่อ key
+        item[header] = row[index] ?? null // ใช้ null ถ้าไม่มีค่า
+      });
+      return item as TransactionItem
+    })
+
+    const paginatedResponse: PaginatedData = {
+      items: items,
+      page: page,
+      pageSize: limit,
+      // total: totalRows, // จำนวนข้อมูลทั้งหมด (ไม่รวม header)
+    }
+    return Response.json(paginatedResponse)
   } catch (error) {
     console.error(error)
     return Response.json({ error: 'Failed to fetch data' }, { status: 500 })
