@@ -25,7 +25,7 @@ export default function Sidebar() {
         error: (err) =>
           err?.response?.data?.message || err.message || "เกิดข้อผิดพลาด",
       });
-      const res = await logoutPromise;
+      await logoutPromise;
       router.refresh();
     } catch (e) {
       console.log(e);
