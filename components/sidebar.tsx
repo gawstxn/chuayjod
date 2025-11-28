@@ -1,56 +1,53 @@
-'use client'
+"use client";
 
-import { APP_CONFIG } from "@/config/app"
-import { routes } from "@/utils/contants"
-import axios from "axios"
-import { LogOut, PiggyBank } from "lucide-react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { useState } from "react"
-import { toast } from "sonner"
-import { Button } from "./ui/button"
-
+import { APP_CONFIG } from "@/config/app";
+import { routes } from "@/utils/contants";
+import axios from "axios";
+import { LogOut, PiggyBank } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "./ui/button";
 
 export default function Sidebar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
-  const pathname = usePathname()
-  const router = useRouter()
-  const isActive = (path: string) => pathname?.startsWith(path)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const isActive = (path: string) => pathname?.startsWith(path);
 
   const handleLogout = async () => {
     try {
-      const logoutPromise = axios.post("/api/auth/pin/logout")
-      toast.promise(
-        logoutPromise,
-        {
-          loading: "กำลังออกจากระบบ",
-          success: "ออกจากระบบสำเร็จ",
-          error: (err) => err?.response?.data?.message || err.message || "เกิดข้อผิดพลาด",
-        }
-      )
-      const res = await logoutPromise
-      router.refresh()
-    } catch(e) {
-      console.log(e)
+      const logoutPromise = axios.post("/api/auth/pin/logout");
+      toast.promise(logoutPromise, {
+        loading: "กำลังออกจากระบบ",
+        success: "ออกจากระบบสำเร็จ",
+        error: (err) =>
+          err?.response?.data?.message || err.message || "เกิดข้อผิดพลาด",
+      });
+      const res = await logoutPromise;
+      router.refresh();
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
 
   return (
-    <div className="h-full w-full lg:border-r bg-background/40 backdrop-blur-md">
+    <div className="sticky top-0 h-screen w-80 lg:border-r hidden lg:block">
       {/* header */}
       <div className="flex justify-between items-center border-b p-4">
         <div className="flex items-center gap-1">
-          <PiggyBank/>
+          <PiggyBank />
           <h1 className="text-lg font-bold">{APP_CONFIG.name}</h1>
         </div>
       </div>
       {/* desktop route items */}
-      <div className="relative hidden lg:flex flex-col justify-between gap-3 w-72 p-4">
+      <div className="relative hidden lg:flex flex-col justify-between gap-3 p-4">
         {routes.map((item, key) => (
           <Link href={item.path} key={key}>
-            <Button 
-              size={"lg"} 
-              className="w-full flex justify-start items-center cursor-pointer" 
+            <Button
+              size={"lg"}
+              className="w-full flex justify-start items-center cursor-pointer"
               variant={isActive(item.path) ? "default" : "ghost"}
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -60,16 +57,18 @@ export default function Sidebar() {
           </Link>
         ))}
         <hr />
-        <Button 
+        <Button
           variant={"destructive"}
           className="w-full cursor-pointer"
-          onClick={handleLogout}    
+          onClick={handleLogout}
         >
           <LogOut />
           ออกจากระบบ
         </Button>
-        
-        <p className="fixed left-0 bottom-0 p-4 text-muted-foreground">{APP_CONFIG.name} V.{APP_CONFIG.version}</p>
+
+        <p className="fixed left-0 bottom-0 p-4 text-muted-foreground text-xs">
+          © {new Date().getFullYear()} {APP_CONFIG.name} All rights reserved.
+        </p>
       </div>
       {/* mobile route items */}
       {isMobileMenuOpen && (
@@ -82,9 +81,9 @@ export default function Sidebar() {
         >
           {routes.map((item, key) => (
             <Link href={item.path} key={key}>
-              <Button 
-                size="lg" 
-                className="w-full flex justify-start items-center cursor-pointer" 
+              <Button
+                size="lg"
+                className="w-full flex justify-start items-center cursor-pointer"
                 variant={isActive(item.path) ? "default" : "ghost"}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -94,10 +93,10 @@ export default function Sidebar() {
             </Link>
           ))}
           <hr />
-          <Button 
+          <Button
             variant={"destructive"}
             className="cursor-pointer"
-            onClick={handleLogout}    
+            onClick={handleLogout}
           >
             <LogOut />
             ออกจากระบบ
@@ -105,5 +104,5 @@ export default function Sidebar() {
         </div>
       )}
     </div>
-  )
+  );
 }
